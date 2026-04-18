@@ -5,6 +5,9 @@
     <Compile Update="KonexioForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="LangileForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
