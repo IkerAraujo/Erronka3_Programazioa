@@ -12,9 +12,9 @@ namespace Pizzeria
         public KonexioForm()
         {
             Zerbitzaria = "localhost";
-            DatuBasea = "pizzeria";
+            DatuBasea = "EuskoPizza";
             Erabiltzailea = "root";
-            Pasahitza = "1MG32025";
+            Pasahitza = "1MG32024";
         }
 
         public void ErroreaErakutsi(string mezua)
