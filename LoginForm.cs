@@ -6,124 +6,148 @@ namespace Pizzeria
 {
     public class LoginForm : Form
     {
-        private TextBox txtUser;
-        private TextBox txtPwd;
-        private Button btnLogin;
-        private Label lblError;
+        private TextBox txtErabiltzaileIzena;
+        private TextBox txtPasahitza;
+        private Button btnSartu;
+        private Label lblErrorea;
 
         public LoginForm()
         {
-            Estiloak.FormEzarri(this, "EuskoPizza — Saioa hasi", 420, 400);
+            Estiloak.FormEzarri(this, "EuskoPizza — Saioa hasi", 420, 470);
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            Eraiki();
+            EraikiForms();
         }
 
-        private void Eraiki()
+        private void EraikiForms()
         {
-        
-            this.Controls.Add(
-                Estiloak.LabelSortu(
-                    "🍕 EuskoPizza",
-                    40, 30, 320, 40,
-                    Estiloak.FontTitulu,
-                    Estiloak.Gorria));
+            Panel goiburua = new Panel();
+            goiburua.Dock = DockStyle.Top;
+            goiburua.Height = 130;
+            goiburua.BackColor = Estiloak.Gorria;
 
-           
-            this.Controls.Add(
-                Estiloak.LabelSortu(
-                    "Erabiltzaile izena",
-                    40, 100, 300, 20,
-                    Estiloak.FontH3,
-                    Estiloak.TestuArgia));
+            Label lblPizza = new Label();
+            lblPizza.Text = "🍕";
+            lblPizza.Font = new Font("Segoe UI Emoji", 36);
+            lblPizza.ForeColor = Color.White;
+            lblPizza.Location = new Point(155, 10);
+            lblPizza.AutoSize = true;
+            lblPizza.BackColor = Color.Transparent;
 
-            txtUser = Estiloak.TextBoxSortu(40, 125, 320);
-            this.Controls.Add(txtUser);
+            Label lblIzena = new Label();
+            lblIzena.Text = "EuskoPizza";
+            lblIzena.Font = new Font("Segoe UI", 22, FontStyle.Bold);
+            lblIzena.ForeColor = Color.White;
+            lblIzena.Location = new Point(105, 78);
+            lblIzena.AutoSize = true;
+            lblIzena.BackColor = Color.Transparent;
 
-            this.Controls.Add(
-                Estiloak.LabelSortu(
-                    "Pasahitza",
-                    40, 170, 300, 20,
-                    Estiloak.FontH3,
-                    Estiloak.TestuArgia));
+            goiburua.Controls.Add(lblPizza);
+            goiburua.Controls.Add(lblIzena);
+            this.Controls.Add(goiburua);
 
-            txtPwd = Estiloak.TextBoxSortu(40, 195, 320, pasahitza: true);
-            this.Controls.Add(txtPwd);
+            Label l1 = Estiloak.LabelSortu("Erabiltzaile izena",
+                50, 160, 300, 22, Estiloak.FontH3, Estiloak.TestuArgia);
+            txtErabiltzaileIzena = Estiloak.TextBoxSortu(50, 185, 310);
+            txtErabiltzaileIzena.PlaceholderText = "adib: ane, jon, admin...";
 
-            lblError = Estiloak.LabelSortu(
-                "",
-                40, 235, 320, 22,
-                Estiloak.FontTxiki,
-                Color.FromArgb(255, 110, 110));
-            this.Controls.Add(lblError);
+            Label l2 = Estiloak.LabelSortu("Pasahitza",
+                50, 235, 300, 22, Estiloak.FontH3, Estiloak.TestuArgia);
+            txtPasahitza = Estiloak.TextBoxSortu(50, 260, 310, pasahitza: true);
 
-            btnLogin = Estiloak.BotoiNagusiaSortu(
-                "Sartu →",
-                40, 270, 320, 46,
-                Estiloak.Gorria);
+            lblErrorea = Estiloak.LabelSortu("",
+                50, 308, 310, 22, Estiloak.FontTxiki,
+                Color.FromArgb(255, 100, 100));
 
-            btnLogin.Font = new Font("Segoe UI", 11, FontStyle.Bold);
-            btnLogin.Click += BtnLogin_Click;
-            this.Controls.Add(btnLogin);
+            btnSartu = Estiloak.BotoiNagusiaSortu("Sartu →",
+                50, 340, 310, 46, Estiloak.Gorria);
+            btnSartu.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            btnSartu.Click += new EventHandler(btnSartu_Click);
 
-            this.AcceptButton = btnLogin;
+            Label lblLag = Estiloak.LabelSortu(
+                "Erabiltzaileak: ane · jon · mikel · admin",
+                50, 400, 310, 20, Estiloak.FontTxiki, Estiloak.TestuArgia);
+            lblLag.TextAlign = ContentAlignment.MiddleCenter;
+
+            this.Controls.AddRange(new Control[] {
+                l1, txtErabiltzaileIzena,
+                l2, txtPasahitza,
+                lblErrorea, btnSartu, lblLag
+            });
+
+            this.AcceptButton = btnSartu;
         }
 
-        private void BtnLogin_Click(object sender, EventArgs e)
+        private void btnSartu_Click(object sender, EventArgs e)
         {
-            lblError.Text = "";
+            lblErrorea.Text = "";
+            string eu = txtErabiltzaileIzena.Text.Trim();
+            string pw = txtPasahitza.Text;
 
-            string erabiltzailea = txtUser.Text.Trim();
-            string pasahitza = txtPwd.Text;
-
-            if (erabiltzailea == "" || pasahitza == "")
+            if (eu == "" || pw == "")
             {
-                lblError.Text = "⚠ Bete erabiltzailea eta pasahitza.";
+                lblErrorea.Text = "⚠ Bete itzazu bi eremuak.";
                 return;
             }
 
-            btnLogin.Enabled = false;
-            btnLogin.Text = "Egiaztatzen...";
+            btnSartu.Enabled = false;
+            btnSartu.Text = "Egiaztatzea...";
 
             try
             {
-                Erabiltzaile erabiltzaileaObj =
-                    DatuBasea.SaioaHasi(erabiltzailea, pasahitza);
+                Erabiltzaile erabiltzailea = DatuBasea.SaioaHasi(eu, pw);
 
-                if (erabiltzaileaObj == null)
+                if (erabiltzailea == null)
                 {
-                    lblError.Text = "✗ Erabiltzaile edo pasahitza okerra.";
-                    txtPwd.Clear();
-                    txtPwd.Focus();
+                    lblErrorea.Text = "✗ Erabiltzaile izena edo pasahitza okerra.";
+                    txtPasahitza.Clear();
+                    txtPasahitza.Focus();
                     return;
                 }
 
-                Form hurrengoa = null;
+                Form hurrengoLeihoa = null;
 
-                if (erabiltzaileaObj is LangileArrunta)
-                    hurrengoa = new LangileForm((LangileArrunta)erabiltzaileaObj);
-                else if (erabiltzaileaObj is Sukaldaria)
-                    hurrengoa = new SukaldeForm((Sukaldaria)erabiltzaileaObj);
-                else if (erabiltzaileaObj is Banatzailea)
-                    hurrengoa = new BanatzaileForm((Banatzailea)erabiltzaileaObj);
-                else if (erabiltzaileaObj is Admin)
-                    hurrengoa = new AdminForm((Admin)erabiltzaileaObj);
+                if (erabiltzailea is LangileArrunta)
+                {
+                    LangileArrunta l = (LangileArrunta)erabiltzailea;
+                    hurrengoLeihoa = new LangileForm(l);
+                }
+                else if (erabiltzailea is Sukaldaria)
+                {
+                    Sukaldaria s = (Sukaldaria)erabiltzailea;
+                    hurrengoLeihoa = new SukaldeForm(s);
+                }
+                else if (erabiltzailea is Banatzailea)
+                {
+                    Banatzailea b = (Banatzailea)erabiltzailea;
+                    hurrengoLeihoa = new BanatzaileForm(b);
+                }
+                else if (erabiltzailea is Admin)
+                {
+                    Admin a = (Admin)erabiltzailea;
+                    hurrengoLeihoa = new AdminForm(a);
+                }
 
-                if (hurrengoa != null)
+                if (hurrengoLeihoa != null)
                 {
                     this.Hide();
-                    hurrengoa.FormClosed += (s, ev) => this.Close();
-                    hurrengoa.Show();
+                    hurrengoLeihoa.FormClosed += new FormClosedEventHandler(Itxi);
+                    hurrengoLeihoa.Show();
                 }
             }
             catch (Exception ex)
             {
-                lblError.Text = "⚠ Errorea: " + ex.Message;
+                lblErrorea.Text = "⚠ Errorea: " + ex.Message;
             }
             finally
             {
-                btnLogin.Enabled = true;
-                btnLogin.Text = "Sartu →";
+                btnSartu.Enabled = true;
+                btnSartu.Text = "Sartu →";
             }
+        }
+
+        private void Itxi(object sender, FormClosedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
