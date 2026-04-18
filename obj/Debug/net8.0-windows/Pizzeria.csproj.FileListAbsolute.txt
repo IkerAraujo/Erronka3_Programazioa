@@ -1,0 +1,16 @@
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\bin\Debug\net8.0-windows\Pizzeria.exe
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\bin\Debug\net8.0-windows\Pizzeria.deps.json
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\bin\Debug\net8.0-windows\Pizzeria.runtimeconfig.json
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\bin\Debug\net8.0-windows\Pizzeria.dll
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\bin\Debug\net8.0-windows\Pizzeria.pdb
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.AssemblyInfoInputs.cache
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.AssemblyInfo.cs
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.csproj.CoreCompileInputs.cache
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.dll
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\refint\Pizzeria.dll
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.pdb
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.genruntimeconfig.cache
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\ref\Pizzeria.dll
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.LangileForm.resources
+C:\Users\Ander\Downloads\Pizzeria_v2\Pizzeria2\Pizzeria\obj\Debug\net8.0-windows\Pizzeria.csproj.GenerateResource.cache
