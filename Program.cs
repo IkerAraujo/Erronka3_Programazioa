@@ -11,13 +11,30 @@ namespace Pizzeria
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            DatuBasea.KonexioaEzarri(
-                "localhost",
-                "pizzeria",
-                "root",
-                "1MG32025");
+            using (KonexioForm konForm = new KonexioForm())
+            {
+                DialogResult result = konForm.ShowDialog();
 
-            bool konexioaOndo = DatuBasea.KonexioaEgiaztatu();
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+
+                DatuBasea.KonexioaEzarri(
+                    konForm.Zerbitzaria,
+                    konForm.DatuBasea,
+                    konForm.Erabiltzailea,
+                    konForm.Pasahitza
+                );
+
+                bool konexioaOndo = DatuBasea.KonexioaEgiaztatu();
+
+                if (!konexioaOndo)
+                {
+                    konForm.ErroreaErakutsi("Ezin da konektatu datu‑basera");
+                    return;
+                }
+            }
 
             Application.Run(new LoginForm());
         }
