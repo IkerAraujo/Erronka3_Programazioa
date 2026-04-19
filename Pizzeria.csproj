@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>disable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>Pizzeria</AssemblyName>
+    <RootNamespace>Pizzeria</RootNamespace>
+    <!-- Standalone exe: dotnet publish -r win-x64 -p:PublishSingleFile=true -->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- MySQL konexiorako -->
+    <PackageReference Include="MySql.Data" Version="9.1.0" />
+    <!-- PDF sortzeko (iText7 Community - AGPL) -->
+    <PackageReference Include="itext7" Version="8.0.5" />
+  </ItemGroup>
+
+</Project>
