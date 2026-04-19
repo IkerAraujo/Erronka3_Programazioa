@@ -147,7 +147,7 @@ namespace Pizzeria
             return r;
         }
 
-        // ── Titulu banda (koloredun goiburua) ────────────
+        // Titulu banda (koloredun goiburua) 
         public static Panel TituluBandaSortu(Form form, string testua, Color kolorea, string azpitestua = "")
         {
             Panel banda = new Panel();
