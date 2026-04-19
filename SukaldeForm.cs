@@ -52,7 +52,7 @@ namespace Pizzeria
             pEzk.Controls.AddRange(new Control[] { lEzk, lblZainKop, lstZain });
             this.Controls.Add(pEzk);
 
-            // ── Erdiko botoiak ────────────────────────────
+            // ── Erdiko botoiak 
             btnHasi = Estiloak.BotoiNagusiaSortu("Hasi »",
                 365, Y + 105, 85, 40, Estiloak.Laranja);
             btnHasi.Click += new EventHandler(btnHasi_Click);
