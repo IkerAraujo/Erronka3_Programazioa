@@ -1,7 +1,6 @@
 namespace Pizzeria
 {
-    // Pizza produktuaren eredua.
-    // DB-ko "pizzak" taulari dagokio.
+    // Pizza baten datuak gordetzen ditu
     public class Pizza
     {
         public int    Id           { get; set; }

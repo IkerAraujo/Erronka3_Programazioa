@@ -13,9 +13,7 @@ namespace Pizzeria
         Entregatuta
     }
 
-    // ── Eskaera klasea ────────────────────────────────────────
-    // DB-ko "eskaerak" taulari dagokio.
-    // Klase honek eskaera baten datu guztiak gordetzen ditu.
+    // Eskaera baten datuak gordetzen ditu
     public class Eskaera
     {
         public int           Id              { get; set; }
@@ -26,7 +24,6 @@ namespace Pizzeria
         public EgoeraMota    Egoera          { get; set; }
         public DateTime      Data            { get; set; }
 
-        // Kalkulatutako propietatea: pizza guztien prezioen batura
         public double PrezioTotala
         {
             get
@@ -50,14 +47,12 @@ namespace Pizzeria
             Data           = DateTime.Now;
         }
 
-        // Pizza zerrendaratu eskaerara
         public void PizzaGehitu(Pizza pizza)
         {
             Pizzak.Add(pizza);
         }
 
-        // Egoera hurrengo fasera pasa (egoera makina)
-        // Oharra: DB-a eguneratzeko DatuBasea.EskaeraEgoeraPasatu() deitu behar da!
+        // Eskaeraren egoera hurrengo fasera pasatzen du
         public void EgoeraPasatu()
         {
             if      (Egoera == EgoeraMota.PrestatzekoZain)
@@ -75,6 +70,27 @@ namespace Pizzeria
         {
             string mota = EtxekoEntrega ? "🛵 Etxez-etxe" : "🏠 Dendan";
             return $"#{Id} · {BezeroIzena} · {mota} · {PrezioTotala:F2}€";
+        }
+    }
+
+    public class KontaktuMezua
+    {
+        public int      Id      { get; }
+        public string   Izena   { get; }
+        public string   Gmail   { get; }
+        public string   Gaia    { get; }
+        public string   Testua  { get; }
+        public DateTime Data    { get; }
+
+        public KontaktuMezua(int id, string izena, string gmail,
+                              string gaia, string testua, DateTime data)
+        {
+            Id     = id;
+            Izena  = izena;
+            Gmail  = gmail;
+            Gaia   = gaia;
+            Testua = testua;
+            Data   = data;
         }
     }
 }

@@ -1,9 +1,6 @@
 namespace Pizzeria
 {
-    // ── Erabiltzaile klase abstraktua ─────────────────────────
-    // DB-ko "erabiltzaileak" taulari dagokio (rol_id IS NOT NULL = langilea).
-    // Polimorfismoa: RolaLortu() metodo abstraktua subklase bakoitzak bere modura
-    // implementatzen du.
+    // Klase abstraktua, langile guztiek heredatzen dute
     public abstract class Erabiltzaile
     {
         public int    Id                  { get; set; }
@@ -22,7 +19,6 @@ namespace Pizzeria
             Aktibo             = true;
         }
 
-        // Subklase bakoitzak bere rola itzuli behar du
         public abstract string RolaLortu();
 
         public bool PasahitzaEgiaztatu(string pasahitza)
@@ -32,8 +28,6 @@ namespace Pizzeria
 
         public override string ToString() => $"{Izena} ({RolaLortu()})";
     }
-
-    // ── Subklaseak (herentzia) ────────────────────────────────
 
     public class LangileArrunta : Erabiltzaile
     {
