@@ -30,6 +30,7 @@ namespace Pizzeria
         private Button btnNav4;
         private Button btnNav5;
         private Button btnNav6;
+        private Button btnNav7;
         private Button btnAktibo;  // Une honetan aktibatuta dagoen botoia
 
         // Edukia gordetzeko panelak
@@ -39,6 +40,7 @@ namespace Pizzeria
         private Panel pEdukiPizza;
         private Panel pEdukiLangileKud;
         private Panel pEdukiPdf;
+        private Panel pEdukiKontaktu;
 
         public AdminForm(Admin erabiltzailea)
         {
@@ -52,7 +54,7 @@ namespace Pizzeria
 
         private void EraikiForms()
         {
-            // ── Goiburua (top banda) ──────────────────────
+            // Goiburua (top banda)
             Panel banda = new Panel();
             banda.Dock      = DockStyle.Top;
             banda.Height    = 50;
@@ -75,16 +77,33 @@ namespace Pizzeria
             lblEskaeraKop.BackColor = Color.Transparent;
             banda.Controls.Add(lblEskaeraKop);
 
-            Button btnRefresh = Estiloak.BotoiBigarrenaSortu("↺  Freskatu", 835, 9, 140, 32);
+            Button btnRefresh = Estiloak.BotoiBigarrenaSortu("↺  Freskatu", 835, 9, 130, 32);
             btnRefresh.BackColor = Color.FromArgb(100, 60, 150);
             btnRefresh.ForeColor = Color.White;
             btnRefresh.FlatAppearance.BorderColor = Color.FromArgb(130, 90, 180);
             btnRefresh.Click += new EventHandler(btnRefresh_Click);
             banda.Controls.Add(btnRefresh);
 
-            this.Controls.Add(banda);
+            Button btnItxiSaioa = Estiloak.BotoiBigarrenaSortu("🔓  Itxi saioa", 975, 9, 130, 32);
+            btnItxiSaioa.BackColor = Color.FromArgb(100, 40, 40);
+            btnItxiSaioa.ForeColor = Color.FromArgb(255, 150, 150);
+            btnItxiSaioa.FlatAppearance.BorderColor = Color.FromArgb(150, 60, 60);
+            btnItxiSaioa.Click += (s, e) =>
+            {
+                foreach (Form f in Application.OpenForms)
+                {
+                    if (f is LoginForm login)
+                    {
+                        login.EremuakGarbitu();
+                        login.Show();
+                        break;
+                    }
+                }
+                this.Close();
+            };
+            banda.Controls.Add(btnItxiSaioa);
 
-            // ── Ezkerreko nabigazio barra ─────────────────
+            // Ezkerreko nabigazio barra 
             pNavBar = new Panel();
             pNavBar.Dock      = DockStyle.Left;
             pNavBar.Width     = 175;
@@ -125,7 +144,8 @@ namespace Pizzeria
             btnNav3 = NavBotoiaSortu("🛵  Banatzailea",     navY);  navY += 50;
             btnNav4 = NavBotoiaSortu("🍕  Pizza kudeaketa", navY);  navY += 50;
             btnNav5 = NavBotoiaSortu("👥  Langileak",       navY);  navY += 50;
-            btnNav6 = NavBotoiaSortu("📄  PDF txostena",    navY);
+            btnNav6 = NavBotoiaSortu("📄  PDF txostena",    navY);  navY += 50;
+            btnNav7 = NavBotoiaSortu("📬  Mezuak",          navY);
 
             btnNav1.Click += new EventHandler(btnNav1_Click);
             btnNav2.Click += new EventHandler(btnNav2_Click);
@@ -133,6 +153,7 @@ namespace Pizzeria
             btnNav4.Click += new EventHandler(btnNav4_Click);
             btnNav5.Click += new EventHandler(btnNav5_Click);
             btnNav6.Click += new EventHandler(btnNav6_Click);
+            btnNav7.Click += new EventHandler(btnNav7_Click);
 
             pNavBar.Controls.Add(btnNav1);
             pNavBar.Controls.Add(btnNav2);
@@ -140,8 +161,9 @@ namespace Pizzeria
             pNavBar.Controls.Add(btnNav4);
             pNavBar.Controls.Add(btnNav5);
             pNavBar.Controls.Add(btnNav6);
+            pNavBar.Controls.Add(btnNav7);
 
-            // ── Eskuineko eduki area + sidebar elkarrekin panel batean ──
+            // Eskuineko eduki area + sidebar elkarrekin panel batean 
             Panel mainPanel = new Panel();
             mainPanel.Dock      = DockStyle.Fill;
             mainPanel.BackColor = Estiloak.Iluna;
@@ -150,21 +172,22 @@ namespace Pizzeria
             pEdukia.Dock      = DockStyle.Fill;
             pEdukia.BackColor = Estiloak.Iluna;
 
-            // GARRANTZITSUA: Fill lehenik gehitu, gero Left
             // WinForms-ek Fill atzera puskatzen du Left gehitzen denean
             mainPanel.Controls.Add(pEdukia);
             mainPanel.Controls.Add(pNavBar);
 
+            // GARRANTZITSUA: mainPanel (Fill) lehenik, banda (Top) geroago
             this.Controls.Add(mainPanel);
+            this.Controls.Add(banda);
 
-            // ── Eduki panelak sortu eta txertatu ──────────
+            // Eduki panelak sortu eta txertatu 
             EdukiPanelakSortu();
 
             // Lehenengo pantaila erakutsi (Eskaera berriak)
             NavAktibatu(btnNav1, pEdukiLangile);
         }
 
-        // ── Nabigazio botoi baten estiloa sortu ───────────
+        //  Nabigazio botoi baten estiloa sortu
         private Button NavBotoiaSortu(string testua, int y)
         {
             Button btn = new Button();
@@ -182,11 +205,10 @@ namespace Pizzeria
             return btn;
         }
 
-        // ── Eduki panelak sortu ───────────────────────────
+        // Eduki panelak sortu
         private void EdukiPanelakSortu()
         {
-            // Panel bakoitza pEdukia-ren barruan txertatuta, denak Fill
-            // Show/Hide erabiliko dugu
+
 
             // Panel 1 — Langile forma
             pEdukiLangile = new Panel();
@@ -231,9 +253,16 @@ namespace Pizzeria
             pEdukiPdf.Dock = DockStyle.Fill;
             pEdukiPdf.Controls.Add(PdfPanelSortu());
             pEdukia.Controls.Add(pEdukiPdf);
+
+            // Panel 7 — Kontaktu mezuak
+            pEdukiKontaktu = new Panel();
+            pEdukiKontaktu.Dock = DockStyle.Fill;
+            KontaktuMezuakForm kontaktuForm = new KontaktuMezuakForm();
+            TxertatuForma(kontaktuForm, pEdukiKontaktu);
+            pEdukia.Controls.Add(pEdukiKontaktu);
         }
 
-        // ── Forma bat panel batean txertatu ───────────────
+        //  Forma bat panel batean txertatu 
         private static void TxertatuForma(Form forma, Panel panel)
         {
             forma.AutoScroll      = false;
@@ -243,18 +272,22 @@ namespace Pizzeria
             panel.Controls.Add(forma);
             forma.Show();
 
-            // Formaren TituluBanda (goiko banda koloreduna) ezkutatu
+
             for (int i = 0; i < forma.Controls.Count; i++)
             {
                 if (forma.Controls[i].Dock == DockStyle.Top)
                 {
-                    forma.Controls[i].Visible = false;
+                    forma.Controls[i].BackColor = Estiloak.Iluna;
+                    for (int j = 0; j < forma.Controls[i].Controls.Count; j++)
+                    {
+                        forma.Controls[i].Controls[j].Visible = false;
+                    }
                     break;
                 }
             }
         }
 
-        // ── Nabigazio botoia aktibatu eta panela erakutsi ─
+        //  Nabigazio botoia aktibatu eta panela erakutsi 
         private void NavAktibatu(Button botoia, Panel panela)
         {
             // Botoi guztiak berrezarri
@@ -293,7 +326,7 @@ namespace Pizzeria
             }
         }
 
-        // ── Nabigazio botoi klikak ────────────────────────
+        // Nabigazio botoi klikak
         private void btnNav1_Click(object sender, EventArgs e)
         {
             NavAktibatu(btnNav1, pEdukiLangile);
@@ -326,6 +359,11 @@ namespace Pizzeria
             NavAktibatu(btnNav6, pEdukiPdf);
         }
 
+        private void btnNav7_Click(object sender, EventArgs e)
+        {
+            NavAktibatu(btnNav7, pEdukiKontaktu);
+        }
+
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             FreskatuDena();
@@ -336,9 +374,7 @@ namespace Pizzeria
             FreskatuDena();
         }
 
-        // ══════════════════════════════════════════════════════
         // PDF panela
-        // ══════════════════════════════════════════════════════
         private Panel PdfPanelSortu()
         {
             Panel p = new Panel();
@@ -411,12 +447,9 @@ namespace Pizzeria
                 lblEg.ForeColor = Estiloak.Berdea;
                 lblEg.Text = "✔  PDF sortuta: " + Path.GetFileName(bidea);
 
-                DialogResult r = MessageBox.Show(
+                if (EuskaraElkarrizketa.GaldeBaiEz(
                     "PDF prest!\n" + bidea + "\n\nIreki nahi duzu?",
-                    "PDF sortuta", MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Information);
-
-                if (r == DialogResult.Yes)
+                    "PDF sortuta"))
                 {
                     System.Diagnostics.ProcessStartInfo psi =
                         new System.Diagnostics.ProcessStartInfo(bidea);
@@ -427,13 +460,15 @@ namespace Pizzeria
             catch (Exception ex)
             {
                 lblEg.ForeColor = Color.FromArgb(255, 100, 100);
+                string mezuOsoa = ex.Message;
+                if (ex.InnerException != null)
+                    mezuOsoa += "\nBarrukoa: " + ex.InnerException.Message;
+                EuskaraElkarrizketa.Mezua(mezuOsoa, "PDF Errorea", errorea: true);
                 lblEg.Text = "⚠ Errorea: " + ex.Message;
             }
         }
 
-        // ══════════════════════════════════════════════════════
-        // Auto-freskatze tenporizadorea (10 segunduro)
-        // ══════════════════════════════════════════════════════
+        // Tenporizadorea: 10 segunduro behin freskatzen du
         private void TimerHasieratu()
         {
             _timer = new System.Windows.Forms.Timer();
