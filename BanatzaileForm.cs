@@ -19,6 +19,7 @@ namespace Pizzeria
         private Button      btnHartu;
         private Button      btnEntregatu;
         private Button      btnFreshatu;
+        private Button      btnItxiSaioa;
 
         public BanatzaileForm(Banatzailea erabiltzailea)
         {
@@ -37,7 +38,7 @@ namespace Pizzeria
 
             int Y = 88;
 
-            // ── Zutabe ezkerreko: Banatzeko zain ─────────
+
             Panel pEzk = Estiloak.PanelSortu(15, Y, 330, 295, Estiloak.PanelIluna);
 
             Label lEzk = Estiloak.LabelSortu("📦  Banatzeko prest",
@@ -52,7 +53,7 @@ namespace Pizzeria
             pEzk.Controls.AddRange(new Control[] { lEzk, lblZainKop, lstZain });
             this.Controls.Add(pEzk);
 
-            // ── Erdiko botoiak ────────────────────────────
+
             btnHartu = Estiloak.BotoiNagusiaSortu("Hartu »",
                 358, Y + 95, 88, 40, Estiloak.Urdina);
             btnHartu.Click += new EventHandler(btnHartu_Click);
@@ -69,7 +70,13 @@ namespace Pizzeria
             btnFreshatu.Click += new EventHandler(btnFreshatu_Click);
             this.Controls.Add(btnFreshatu);
 
-            // ── Zutabe eskuineko: Banatzen ────────────────
+            btnItxiSaioa = Estiloak.BotoiBigarrenaSortu("🔓  Itxi saioa",
+                358, Y + 255, 88, 36);
+            btnItxiSaioa.ForeColor = Color.FromArgb(255, 120, 120);
+            btnItxiSaioa.Click += new EventHandler(btnItxiSaioa_Click);
+            this.Controls.Add(btnItxiSaioa);
+
+
             Panel pEsk = Estiloak.PanelSortu(458, Y, 288, 295, Estiloak.PanelIluna);
 
             Label lEsk = Estiloak.LabelSortu("🚗  Bidean",
@@ -84,7 +91,7 @@ namespace Pizzeria
             pEsk.Controls.AddRange(new Control[] { lEsk, lblBanKop, lstBanatzen });
             this.Controls.Add(pEsk);
 
-            // ── Info panela ───────────────────────────────
+
             this.Controls.Add(Estiloak.LabelSortu("Eskaeraren xehetasunak",
                 15, Y + 305, 300, 22, Estiloak.FontTxiki, Estiloak.TestuArgia));
             rtbInfo = Estiloak.InfoPanelSortu(15, Y + 328, 730, 80);
@@ -133,8 +140,7 @@ namespace Pizzeria
         {
             if (lstZain.SelectedItem == null)
             {
-                MessageBox.Show("Hautatu eskaera bat ezkerreko zerrendatik.",
-                    "Abisua", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                EuskaraElkarrizketa.Mezua("Hautatu eskaera bat ezkerreko zerrendatik.", "Abisua");
                 return;
             }
 
@@ -148,8 +154,7 @@ namespace Pizzeria
             }
             catch (Exception ex)
             {
-                MessageBox.Show("DB errorea: " + ex.Message, "Errorea",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                EuskaraElkarrizketa.Mezua("DB errorea: " + ex.Message, "Errorea", errorea: true);
             }
         }
 
@@ -157,20 +162,16 @@ namespace Pizzeria
         {
             if (lstBanatzen.SelectedItem == null)
             {
-                MessageBox.Show("Hautatu eskaera bat 'Bidean' zerrendatik.",
-                    "Abisua", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                EuskaraElkarrizketa.Mezua("Hautatu eskaera bat 'Bidean' zerrendatik.", "Abisua");
                 return;
             }
 
             Eskaera ek = (Eskaera)lstBanatzen.SelectedItem;
 
-            DialogResult r = MessageBox.Show(
+            if (!EuskaraElkarrizketa.GaldeBaiEz(
                 "#" + ek.Id + " eskaera entregatu al da?\n" +
                 ek.BezeroIzena + " · " + ek.BezeroHelbidea,
-                "Berretsi entrega",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (r != DialogResult.Yes) return;
+                "Berretsi entrega")) return;
 
             try
             {
@@ -182,14 +183,27 @@ namespace Pizzeria
             }
             catch (Exception ex)
             {
-                MessageBox.Show("DB errorea: " + ex.Message, "Errorea",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                EuskaraElkarrizketa.Mezua("DB errorea: " + ex.Message, "Errorea", errorea: true);
             }
         }
 
         private void btnFreshatu_Click(object sender, EventArgs e)
         {
             EskaerаkFreshatu();
+        }
+
+        private void btnItxiSaioa_Click(object sender, EventArgs e)
+        {
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f is LoginForm login)
+                {
+                    login.EremuakGarbitu();
+                    login.Show();
+                    break;
+                }
+            }
+            this.Close();
         }
 
         private void lst_SelectedChanged(object sender, EventArgs e)

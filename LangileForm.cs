@@ -5,6 +5,7 @@ using System.Windows.Forms;
 
 namespace Pizzeria
 {
+    // Langile Arruntaren pantaila: eskaera berriak sortzeko
     public class LangileForm : Form
     {
         private readonly LangileArrunta _erabiltzailea;
@@ -21,6 +22,7 @@ namespace Pizzeria
         private Button   btnKendu;
         private Button   btnGorde;
         private Button   btnIkusi;
+        private Button   btnItxiSaioa;
 
         private List<Pizza> _pizzaHautatuak = new List<Pizza>();
 
@@ -108,6 +110,12 @@ namespace Pizzeria
             btnIkusi.Click += btnIkusi_Click;
             this.Controls.Add(btnIkusi);
 
+            btnItxiSaioa = Estiloak.BotoiBigarrenaSortu("🔓  Itxi saioa",
+                475, Ybot + 5, 165, 36);
+            btnItxiSaioa.ForeColor = Color.FromArgb(255, 120, 120);
+            btnItxiSaioa.Click += btnItxiSaioa_Click;
+            this.Controls.Add(btnItxiSaioa);
+
             lblEgoera = Estiloak.LabelSortu("",
                 20, Ybot + 55, 710, 22, Estiloak.FontTxiki, Estiloak.Berdea);
             lblEgoera.TextAlign = ContentAlignment.MiddleCenter;
@@ -156,8 +164,8 @@ namespace Pizzeria
             if (lstKatalogoa.SelectedItem == null) return;
 
             Pizza pizza = (Pizza)lstKatalogoa.SelectedItem;
-            _pizzaHautatuak.Add(pizza);           
-            lstEskaerako.Items.Add(pizza);        
+            _pizzaHautatuak.Add(pizza);
+            lstEskaerako.Items.Add(pizza);
             TotalaEguneratu();
             lblEgoera.Text = "";
         }
@@ -167,7 +175,7 @@ namespace Pizzeria
             int i = lstEskaerako.SelectedIndex;
             if (i < 0) return;
 
-            _pizzaHautatuak.RemoveAt(i);           
+            _pizzaHautatuak.RemoveAt(i);
             lstEskaerako.Items.RemoveAt(i);
             TotalaEguneratu();
         }
@@ -190,6 +198,7 @@ namespace Pizzeria
         {
             lblEgoera.ForeColor = Color.FromArgb(255, 100, 100);
 
+            // Balioztatze
             if (string.IsNullOrEmpty(txtBezeroIzena.Text.Trim()))
             { lblEgoera.Text = "⚠ Idatzi bezeroaren izena."; return; }
 
@@ -207,7 +216,7 @@ namespace Pizzeria
                 for (int i = 0; i < _pizzaHautatuak.Count; i++)
                     eskaera.PizzaGehitu(_pizzaHautatuak[i]);
 
-                int idBerria = DatuBasea.EskaeraGorde(eskaera); 
+                int idBerria = DatuBasea.EskaeraGorde(eskaera);
 
                 txtBezeroIzena.Clear();
                 txtHelbidea.Clear();
@@ -228,31 +237,26 @@ namespace Pizzeria
 
         private void btnIkusi_Click(object sender, EventArgs e)
         {
-            try
-            {
-                List<Eskaera> eskaerак =
-                    DatuBasea.EskaerakEgoeraren(EgoeraMota.BanatzekoZain);
+            new DendanEskaerakForm().ShowDialog(this);
+        }
 
-                string mezua = "Dendan jasotzeko prest:\n\n";
-                bool bat = false;
-                for (int i = 0; i < eskaerак.Count; i++)
+        private void btnItxiSaioa_Click(object sender, EventArgs e)
+        {
+            ItxiSaioa();
+        }
+
+        private void ItxiSaioa()
+        {
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f is LoginForm login)
                 {
-                    if (!eskaerак[i].EtxekoEntrega)
-                    {
-                        mezua += "  " + eskaerак[i].ToString() + "\n";
-                        bat = true;
-                    }
+                    login.EremuakGarbitu();
+                    login.Show();
+                    break;
                 }
-                if (!bat) mezua += "(Oraingoz ez dago eskaerarik prest)";
-
-                MessageBox.Show(mezua, "Dendan jasotzeko",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("DB errorea: " + ex.Message, "Errorea",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            this.Close();
         }
     }
 }
