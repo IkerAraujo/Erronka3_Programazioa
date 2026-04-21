@@ -4,12 +4,13 @@ using System.Windows.Forms;
 
 namespace Pizzeria
 {
+    // Login pantaila
     public class LoginForm : Form
     {
         private TextBox txtErabiltzaileIzena;
         private TextBox txtPasahitza;
-        private Button btnSartu;
-        private Label lblErrorea;
+        private Button  btnSartu;
+        private Label   lblErrorea;
 
         public LoginForm()
         {
@@ -21,24 +22,24 @@ namespace Pizzeria
         private void EraikiForms()
         {
             Panel goiburua = new Panel();
-            goiburua.Dock = DockStyle.Top;
-            goiburua.Height = 130;
+            goiburua.Dock      = DockStyle.Top;
+            goiburua.Height    = 130;
             goiburua.BackColor = Estiloak.Gorria;
 
             Label lblPizza = new Label();
-            lblPizza.Text = "🍕";
-            lblPizza.Font = new Font("Segoe UI Emoji", 36);
+            lblPizza.Text      = "🍕";
+            lblPizza.Font      = new Font("Segoe UI Emoji", 36);
             lblPizza.ForeColor = Color.White;
-            lblPizza.Location = new Point(155, 10);
-            lblPizza.AutoSize = true;
+            lblPizza.Location  = new Point(155, 10);
+            lblPizza.AutoSize  = true;
             lblPizza.BackColor = Color.Transparent;
 
             Label lblIzena = new Label();
-            lblIzena.Text = "EuskoPizza";
-            lblIzena.Font = new Font("Segoe UI", 22, FontStyle.Bold);
+            lblIzena.Text      = "EuskoPizza";
+            lblIzena.Font      = new Font("Segoe UI", 22, FontStyle.Bold);
             lblIzena.ForeColor = Color.White;
-            lblIzena.Location = new Point(105, 78);
-            lblIzena.AutoSize = true;
+            lblIzena.Location  = new Point(105, 78);
+            lblIzena.AutoSize  = true;
             lblIzena.BackColor = Color.Transparent;
 
             goiburua.Controls.Add(lblPizza);
@@ -60,7 +61,7 @@ namespace Pizzeria
 
             btnSartu = Estiloak.BotoiNagusiaSortu("Sartu →",
                 50, 340, 310, 46, Estiloak.Gorria);
-            btnSartu.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            btnSartu.Font   = new Font("Segoe UI", 12, FontStyle.Bold);
             btnSartu.Click += new EventHandler(btnSartu_Click);
 
             Label lblLag = Estiloak.LabelSortu(
@@ -90,7 +91,7 @@ namespace Pizzeria
             }
 
             btnSartu.Enabled = false;
-            btnSartu.Text = "Egiaztatzea...";
+            btnSartu.Text    = "Egiaztatzea...";
 
             try
             {
@@ -141,13 +142,22 @@ namespace Pizzeria
             finally
             {
                 btnSartu.Enabled = true;
-                btnSartu.Text = "Sartu →";
+                btnSartu.Text    = "Sartu →";
             }
+        }
+
+        public void EremuakGarbitu()
+        {
+            txtErabiltzaileIzena.Clear();
+            txtPasahitza.Clear();
+            lblErrorea.Text = "";
+            txtErabiltzaileIzena.Focus();
         }
 
         private void Itxi(object sender, FormClosedEventArgs e)
         {
-            this.Close();
+            if (!this.Visible)
+                this.Close();
         }
     }
 }
