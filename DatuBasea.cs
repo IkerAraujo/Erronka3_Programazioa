@@ -4,20 +4,20 @@ using MySql.Data.MySqlClient;
 
 namespace Pizzeria
 {
-
+    // MySQL datu-basearekin konektatzen den klase estatikoa
     public static class DatuBasea
     {
-        private static string _server = "localhost";
-        private static string _database = "euskopizza";
-        private static string _user = "root";
-        private static string _password = "";
+        private static string _server   = "192.168.115.176";
+        private static string _database = "3erronka";
+        private static string _user     = "admin";
+        private static string _password = "1MG32025";
 
         public static void KonexioaEzarri(string server, string database,
-                                           string user, string password)
+                                           string user,   string password)
         {
-            _server = server;
+            _server   = server;
             _database = database;
-            _user = user;
+            _user     = user;
             _password = password;
         }
 
@@ -33,6 +33,7 @@ namespace Pizzeria
             return new MySqlConnection(KonexioKatea());
         }
 
+        // true itzultzen du konexioa ondo badoa
         public static bool KonexioaEgiaztatu()
         {
             try
@@ -48,17 +49,19 @@ namespace Pizzeria
             }
         }
 
+        // --- LOGIN ---
 
+        // Erabiltzailea egiaztatu eta bere rol-objektua itzultzen du, edo null
         public static Erabiltzaile SaioaHasi(string erabiltzaileIzena, string pasahitza)
         {
             MySqlConnection kon = KonexioaSortu();
             kon.Open();
 
             string sql = "SELECT e.id, e.izena, e.pasahitza, r.izena AS rola " +
-                         "FROM erabiltzaileak e " +
+                         "FROM langileak e " +
                          "JOIN rolak r ON r.id = e.rol_id " +
                          "WHERE LOWER(e.izena) = LOWER(@izena) " +
-                         "AND e.aktibo = 1 AND e.rol_id IS NOT NULL LIMIT 1";
+                         "AND e.aktibo = 1 LIMIT 1";
 
             MySqlCommand cmd = new MySqlCommand(sql, kon);
             cmd.Parameters.AddWithValue("@izena", erabiltzaileIzena.Trim());
@@ -81,9 +84,9 @@ namespace Pizzeria
                 return null;
             }
 
-            int id = dr.GetInt32("id");
+            int    id    = dr.GetInt32("id");
             string izena = dr.GetString("izena");
-            string rola = dr.GetString("rola");
+            string rola  = dr.GetString("rola");
 
             dr.Close();
             kon.Close();
@@ -97,6 +100,8 @@ namespace Pizzeria
             else
                 return new LangileArrunta(id, izena, erabiltzaileIzena, pasahitza);
         }
+
+        // --- PIZZAK ---
 
         public static List<Pizza> PizzakLortu()
         {
@@ -128,6 +133,7 @@ namespace Pizzeria
             return pizzak;
         }
 
+        // Admin-entzat: desaktibatutakoak ere itzultzen ditu
         public static List<Pizza> PizzakDenakLortu()
         {
             List<Pizza> pizzak = new List<Pizza>();
@@ -168,10 +174,10 @@ namespace Pizzeria
                          "VALUES (@izena, @mota, @ingredienteak, @prezioa, 1)";
 
             MySqlCommand cmd = new MySqlCommand(sql, kon);
-            cmd.Parameters.AddWithValue("@izena", pizza.Izena);
-            cmd.Parameters.AddWithValue("@mota", pizza.Mota);
+            cmd.Parameters.AddWithValue("@izena",         pizza.Izena);
+            cmd.Parameters.AddWithValue("@mota",          pizza.Mota);
             cmd.Parameters.AddWithValue("@ingredienteak", pizza.Ingredienteak);
-            cmd.Parameters.AddWithValue("@prezioa", pizza.Prezioa);
+            cmd.Parameters.AddWithValue("@prezioa",       pizza.Prezioa);
             cmd.ExecuteNonQuery();
 
             kon.Close();
@@ -187,12 +193,12 @@ namespace Pizzeria
                          "eskuragarri=@eskuragarri WHERE id=@id";
 
             MySqlCommand cmd = new MySqlCommand(sql, kon);
-            cmd.Parameters.AddWithValue("@id", pizza.Id);
-            cmd.Parameters.AddWithValue("@izena", pizza.Izena);
-            cmd.Parameters.AddWithValue("@mota", pizza.Mota);
+            cmd.Parameters.AddWithValue("@id",            pizza.Id);
+            cmd.Parameters.AddWithValue("@izena",         pizza.Izena);
+            cmd.Parameters.AddWithValue("@mota",          pizza.Mota);
             cmd.Parameters.AddWithValue("@ingredienteak", pizza.Ingredienteak);
-            cmd.Parameters.AddWithValue("@prezioa", pizza.Prezioa);
-            cmd.Parameters.AddWithValue("@eskuragarri", pizza.Eskuragarri ? 1 : 0);
+            cmd.Parameters.AddWithValue("@prezioa",       pizza.Prezioa);
+            cmd.Parameters.AddWithValue("@eskuragarri",   pizza.Eskuragarri ? 1 : 0);
             cmd.ExecuteNonQuery();
 
             kon.Close();
@@ -212,6 +218,8 @@ namespace Pizzeria
             kon.Close();
         }
 
+        // --- ESKAERAK ---
+
         public static int EskaeraGorde(Eskaera eskaera)
         {
             MySqlConnection kon = KonexioaSortu();
@@ -220,7 +228,7 @@ namespace Pizzeria
 
             try
             {
-
+                // oharra formatua: "BezeroIzena" edo "BezeroIzena|Helbidea"
                 string oharra = eskaera.BezeroIzena;
                 if (eskaera.EtxekoEntrega)
                     oharra = oharra + "|" + eskaera.BezeroHelbidea;
@@ -244,8 +252,8 @@ namespace Pizzeria
 
                     MySqlCommand cmd2 = new MySqlCommand(sql2, kon, transakzioa);
                     cmd2.Parameters.AddWithValue("@eskaera_id", eskaeraId);
-                    cmd2.Parameters.AddWithValue("@pizza_id", p.Id);
-                    cmd2.Parameters.AddWithValue("@prezioa", p.Prezioa);
+                    cmd2.Parameters.AddWithValue("@pizza_id",   p.Id);
+                    cmd2.Parameters.AddWithValue("@prezioa",    p.Prezioa);
                     cmd2.ExecuteNonQuery();
                 }
 
@@ -256,7 +264,7 @@ namespace Pizzeria
 
                     MySqlCommand cmd3 = new MySqlCommand(sql3, kon, transakzioa);
                     cmd3.Parameters.AddWithValue("@eskaera_id", eskaeraId);
-                    cmd3.Parameters.AddWithValue("@helbidea", eskaera.BezeroHelbidea);
+                    cmd3.Parameters.AddWithValue("@helbidea",   eskaera.BezeroHelbidea);
                     cmd3.ExecuteNonQuery();
                 }
 
@@ -292,18 +300,18 @@ namespace Pizzeria
 
             while (dr.Read())
             {
-                int id = dr.GetInt32("id");
+                int    id     = dr.GetInt32("id");
                 string oharra = dr.IsDBNull(dr.GetOrdinal("oharra")) ? "" : dr.GetString("oharra");
                 DateTime data = dr.GetDateTime("sortze_data");
-                bool etxeko = dr.GetBoolean("etxeko");
+                bool   etxeko = dr.GetBoolean("etxeko");
 
-                string[] zatiak = oharra.Split('|');
+                string[] zatiak    = oharra.Split('|');
                 string bezeroIzena = zatiak.Length > 0 ? zatiak[0] : "";
-                string helbidea = zatiak.Length > 1 ? zatiak[1] : "";
+                string helbidea    = zatiak.Length > 1 ? zatiak[1] : "";
 
                 Eskaera ek = new Eskaera(id, bezeroIzena, etxeko, helbidea);
-                ek.Egoera = egoera;
-                ek.Data = data;
+                ek.Egoera  = egoera;
+                ek.Data    = data;
                 eskaerак.Add(ek);
             }
 
@@ -346,6 +354,37 @@ namespace Pizzeria
             kon.Close();
         }
 
+        public static void EskaeraEzabatu(int eskaeraId)
+        {
+            MySqlConnection kon = KonexioaSortu();
+            kon.Open();
+            MySqlTransaction transakzioa = kon.BeginTransaction();
+
+            try
+            {
+                MySqlCommand cmd1 = new MySqlCommand(
+                    "DELETE FROM eskaera_elementuak WHERE eskaera_id = @id", kon, transakzioa);
+                cmd1.Parameters.AddWithValue("@id", eskaeraId);
+                cmd1.ExecuteNonQuery();
+
+                MySqlCommand cmd2 = new MySqlCommand(
+                    "DELETE FROM eskaerak WHERE id = @id", kon, transakzioa);
+                cmd2.Parameters.AddWithValue("@id", eskaeraId);
+                cmd2.ExecuteNonQuery();
+
+                transakzioa.Commit();
+            }
+            catch
+            {
+                transakzioa.Rollback();
+                throw;
+            }
+            finally
+            {
+                kon.Close();
+            }
+        }
+
         public static void EskaeraEgoeraPasatu(int eskaeraId, string egoeraBerria)
         {
             MySqlConnection kon = KonexioaSortu();
@@ -356,12 +395,13 @@ namespace Pizzeria
 
             MySqlCommand cmd = new MySqlCommand(sql, kon);
             cmd.Parameters.AddWithValue("@egoera", egoeraBerria);
-            cmd.Parameters.AddWithValue("@id", eskaeraId);
+            cmd.Parameters.AddWithValue("@id",     eskaeraId);
             cmd.ExecuteNonQuery();
 
             kon.Close();
         }
 
+        // Banatzaileak eskaera hartzen duenean deitzen da
         public static void BanaketaHasi(int eskaeraId, int banatzaileId)
         {
             MySqlConnection kon = KonexioaSortu();
@@ -392,6 +432,7 @@ namespace Pizzeria
             kon.Close();
         }
 
+        // --- LANGILEAK ---
 
         public static List<Erabiltzaile> LangileakLortu()
         {
@@ -401,19 +442,19 @@ namespace Pizzeria
             kon.Open();
 
             string sql = "SELECT e.id, e.izena, e.aktibo, r.izena AS rola " +
-                         "FROM erabiltzaileak e " +
+                         "FROM langileak e " +
                          "JOIN rolak r ON r.id = e.rol_id " +
-                         "WHERE e.rol_id IS NOT NULL ORDER BY r.id, e.izena";
+                         "ORDER BY r.id, e.izena";
 
             MySqlCommand cmd = new MySqlCommand(sql, kon);
             MySqlDataReader dr = cmd.ExecuteReader();
 
             while (dr.Read())
             {
-                int id = dr.GetInt32("id");
-                string izena = dr.GetString("izena");
-                string rola = dr.GetString("rola");
-                bool aktibo = dr.GetBoolean("aktibo");
+                int    id     = dr.GetInt32("id");
+                string izena  = dr.GetString("izena");
+                string rola   = dr.GetString("rola");
+                bool   aktibo = dr.GetBoolean("aktibo");
 
                 Erabiltzaile e;
 
@@ -436,23 +477,23 @@ namespace Pizzeria
         }
 
         public static void LangilaGehitu(string izena, string abizena,
-                                          string nan, string gmail,
+                                          string nan,   string gmail,
                                           string pasahitza, int rolId)
         {
             MySqlConnection kon = KonexioaSortu();
             kon.Open();
 
-            string sql = "INSERT INTO erabiltzaileak " +
+            string sql = "INSERT INTO langileak " +
                          "(izena, abizena, nan, gmail, pasahitza, rol_id) " +
                          "VALUES (@izena, @abizena, @nan, @gmail, @pasahitza, @rolId)";
 
             MySqlCommand cmd = new MySqlCommand(sql, kon);
-            cmd.Parameters.AddWithValue("@izena", izena);
-            cmd.Parameters.AddWithValue("@abizena", abizena);
-            cmd.Parameters.AddWithValue("@nan", nan);
-            cmd.Parameters.AddWithValue("@gmail", gmail);
+            cmd.Parameters.AddWithValue("@izena",     izena);
+            cmd.Parameters.AddWithValue("@abizena",   abizena);
+            cmd.Parameters.AddWithValue("@nan",       nan);
+            cmd.Parameters.AddWithValue("@gmail",     gmail);
             cmd.Parameters.AddWithValue("@pasahitza", pasahitza);
-            cmd.Parameters.AddWithValue("@rolId", rolId);
+            cmd.Parameters.AddWithValue("@rolId",     rolId);
             cmd.ExecuteNonQuery();
 
             kon.Close();
@@ -463,7 +504,7 @@ namespace Pizzeria
             MySqlConnection kon = KonexioaSortu();
             kon.Open();
 
-            string sql = "UPDATE erabiltzaileak SET aktibo = 0 WHERE id = @id";
+            string sql = "UPDATE langileak SET aktibo = 0 WHERE id = @id";
 
             MySqlCommand cmd = new MySqlCommand(sql, kon);
             cmd.Parameters.AddWithValue("@id", id);
@@ -472,6 +513,58 @@ namespace Pizzeria
             kon.Close();
         }
 
+        public static void LangileEguneratu(int id, string izena, string abizena,
+                                             string nan, string gmail, int rolId)
+        {
+            MySqlConnection kon = KonexioaSortu();
+            kon.Open();
+
+            string sql = "UPDATE langileak SET izena=@izena, abizena=@abizena, " +
+                         "nan=@nan, gmail=@gmail, rol_id=@rolId WHERE id=@id";
+
+            MySqlCommand cmd = new MySqlCommand(sql, kon);
+            cmd.Parameters.AddWithValue("@izena",   izena);
+            cmd.Parameters.AddWithValue("@abizena", abizena);
+            cmd.Parameters.AddWithValue("@nan",     nan);
+            cmd.Parameters.AddWithValue("@gmail",   gmail);
+            cmd.Parameters.AddWithValue("@rolId",   rolId);
+            cmd.Parameters.AddWithValue("@id",      id);
+            cmd.ExecuteNonQuery();
+
+            kon.Close();
+        }
+
+        public static List<KontaktuMezua> KontaktuMezuakLortu()
+        {
+            List<KontaktuMezua> mezuak = new List<KontaktuMezua>();
+
+            MySqlConnection kon = KonexioaSortu();
+            kon.Open();
+
+            string sql = "SELECT id, izena, gmail, gaia, testua, data " +
+                         "FROM kontaktu_mezuak ORDER BY data DESC";
+
+            MySqlCommand    cmd = new MySqlCommand(sql, kon);
+            MySqlDataReader dr  = cmd.ExecuteReader();
+
+            while (dr.Read())
+            {
+                mezuak.Add(new KontaktuMezua(
+                    dr.GetInt32("id"),
+                    dr.GetString("izena"),
+                    dr.GetString("gmail"),
+                    dr.GetString("gaia"),
+                    dr.GetString("testua"),
+                    dr.GetDateTime("data")
+                ));
+            }
+
+            dr.Close();
+            kon.Close();
+            return mezuak;
+        }
+
+        // --- PDF ---
 
         public static List<Eskaera> EskaerakFakturarakoLortu(DateTime eguna)
         {
@@ -493,18 +586,18 @@ namespace Pizzeria
 
             while (dr.Read())
             {
-                int id = dr.GetInt32("id");
+                int    id     = dr.GetInt32("id");
                 string oharra = dr.IsDBNull(dr.GetOrdinal("oharra")) ? "" : dr.GetString("oharra");
                 DateTime data = dr.GetDateTime("sortze_data");
-                bool etxeko = dr.GetBoolean("etxeko");
+                bool   etxeko = dr.GetBoolean("etxeko");
 
-                string[] zatiak = oharra.Split('|');
+                string[] zatiak    = oharra.Split('|');
                 string bezeroIzena = zatiak.Length > 0 ? zatiak[0] : "";
-                string helbidea = zatiak.Length > 1 ? zatiak[1] : "";
+                string helbidea    = zatiak.Length > 1 ? zatiak[1] : "";
 
                 Eskaera ek = new Eskaera(id, bezeroIzena, etxeko, helbidea);
-                ek.Egoera = EgoeraMota.Entregatuta;
-                ek.Data = data;
+                ek.Egoera  = EgoeraMota.Entregatuta;
+                ek.Data    = data;
                 eskaerак.Add(ek);
             }
 
@@ -517,14 +610,15 @@ namespace Pizzeria
             return eskaerак;
         }
 
+        // EgoeraMota enuma DB-ko testu bihurtzen du
         public static string EgoeraTestura(EgoeraMota egoera)
         {
-            if (egoera == EgoeraMota.PrestatzekoZain) return "Prestatzeko zain";
-            else if (egoera == EgoeraMota.Sukaldatzen) return "Sukaldatzen";
-            else if (egoera == EgoeraMota.BanatzekoZain) return "Banatzeko zain";
-            else if (egoera == EgoeraMota.Banatzen) return "Banatzen";
-            else if (egoera == EgoeraMota.Entregatuta) return "Entregatuta";
-            else return "Prestatzeko zain";
+            if      (egoera == EgoeraMota.PrestatzekoZain) return "Prestatzeko zain";
+            else if (egoera == EgoeraMota.Sukaldatzen)     return "Sukaldatzen";
+            else if (egoera == EgoeraMota.BanatzekoZain)   return "Banatzeko zain";
+            else if (egoera == EgoeraMota.Banatzen)         return "Banatzen";
+            else if (egoera == EgoeraMota.Entregatuta)      return "Entregatuta";
+            else                                             return "Prestatzeko zain";
         }
     }
 }
