@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <!-- MySQL konexiorako -->
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.5" />
     <PackageReference Include="MySql.Data" Version="9.1.0" />
     <!-- PDF sortzeko (iText7 Community - AGPL) -->
     <PackageReference Include="itext7" Version="8.0.5" />

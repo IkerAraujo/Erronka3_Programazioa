@@ -3,11 +3,9 @@ using System.Windows.Forms;
 
 namespace Pizzeria
 {
-    // Aplikazio osoko kolore eta estilo sistema.
-    // Forma guztiek klase honen metodo estatikoak erabiltzen dituzte.
+    // Aplikazio osoko kolore eta estilo sistema
     public static class Estiloak
     {
-        // ── Koloreak ──────────────────────────────────────
         public static readonly Color Iluna       = Color.FromArgb(28, 28, 35);
         public static readonly Color PanelIluna  = Color.FromArgb(38, 38, 48);
         public static readonly Color PanelArgia  = Color.FromArgb(50, 50, 63);
@@ -20,7 +18,6 @@ namespace Pizzeria
         public static readonly Color TestuArgia  = Color.FromArgb(160, 160, 175);
         public static readonly Color Muga        = Color.FromArgb(65,  65,  80);
 
-        // ── Letra tipoak ──────────────────────────────────
         public static readonly Font FontTitulu  = new Font("Segoe UI", 18, FontStyle.Bold);
         public static readonly Font FontH2      = new Font("Segoe UI", 12, FontStyle.Bold);
         public static readonly Font FontH3      = new Font("Segoe UI", 10, FontStyle.Bold);
@@ -28,7 +25,6 @@ namespace Pizzeria
         public static readonly Font FontTxiki   = new Font("Segoe UI",  9);
         public static readonly Font FontMono    = new Font("Consolas",  9);
 
-        // ── Form oinarrizkoa ezarri ───────────────────────
         public static void FormEzarri(Form form, string titulua, int zabalera, int altuera)
         {
             form.Text            = titulua;
@@ -41,7 +37,6 @@ namespace Pizzeria
             form.MaximizeBox     = false;
         }
 
-        // ── Panel sortu ───────────────────────────────────
         public static Panel PanelSortu(int x, int y, int z, int alt, Color? kolorea = null)
         {
             Panel p = new Panel();
@@ -51,7 +46,6 @@ namespace Pizzeria
             return p;
         }
 
-        // ── Label sortu ───────────────────────────────────
         public static Label LabelSortu(string testua, int x, int y, int z = 300, int alt = 25,
                                         Font font = null, Color? kolorea = null)
         {
@@ -65,7 +59,6 @@ namespace Pizzeria
             return l;
         }
 
-        // ── TextBox sortu ────────────────────────────────
         public static TextBox TextBoxSortu(int x, int y, int z = 200, bool pasahitza = false)
         {
             TextBox t = new TextBox();
@@ -79,7 +72,6 @@ namespace Pizzeria
             return t;
         }
 
-        // ── Botoi nagusia (betetako kolorea) ─────────────
         public static Button BotoiNagusiaSortu(string testua, int x, int y,
                                                 int z = 160, int alt = 40,
                                                 Color? kolorea = null)
@@ -98,7 +90,6 @@ namespace Pizzeria
             return b;
         }
 
-        // ── Botoi bigarrena (bortekin) ────────────────────
         public static Button BotoiBigarrenaSortu(string testua, int x, int y,
                                                    int z = 140, int alt = 36)
         {
@@ -117,7 +108,6 @@ namespace Pizzeria
             return b;
         }
 
-        // ── ListBox sortu ────────────────────────────────
         public static ListBox ListBoxSortu(int x, int y, int z, int alt)
         {
             ListBox lb = new ListBox();
@@ -132,7 +122,6 @@ namespace Pizzeria
             return lb;
         }
 
-        // ── Info panel (eskaeraren xehetasunak) ──────────
         public static RichTextBox InfoPanelSortu(int x, int y, int z, int alt)
         {
             RichTextBox r = new RichTextBox();
@@ -147,7 +136,6 @@ namespace Pizzeria
             return r;
         }
 
-        // Titulu banda (koloredun goiburua) 
         public static Panel TituluBandaSortu(Form form, string testua, Color kolorea, string azpitestua = "")
         {
             Panel banda = new Panel();
@@ -179,7 +167,6 @@ namespace Pizzeria
             return banda;
         }
 
-        // ── Egoera label txikia koloreduna ───────────────
         public static Label EgoeraBadgeSortu(string testua, Color kolorea, int x, int y)
         {
             Label l = new Label();
@@ -193,7 +180,6 @@ namespace Pizzeria
             return l;
         }
 
-        // ── Lerro banatzailea ─────────────────────────────
         public static Panel LerroaSortu(int x, int y, int zabalera)
         {
             Panel p = new Panel();
@@ -203,7 +189,6 @@ namespace Pizzeria
             return p;
         }
 
-        // ── Kolore argiagoa (hover efekturako) ───────────
         private static Color AltxatuKolorea(Color c)
         {
             return Color.FromArgb(
